@@ -12,6 +12,7 @@ Bundler.require
 
 require 'rspec/its'
 require 'apivore'
+require 'pry'
 
 require File.expand_path('../../lib/swagger_yard', __FILE__)
 require File.expand_path('../fixtures/dummy/config/initializers/swagger_yard.rb', __FILE__)
