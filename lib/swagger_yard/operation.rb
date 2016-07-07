@@ -11,6 +11,12 @@ module SwaggerYard
         operation.ruby_method = yard_object.name(false)
         operation.description = yard_object.docstring
         yard_object.tags.each do |tag|
+
+          if tag.nil?
+            swaggeryard_log.fatal("Yard Object has a nil tag in file `#{yard_object.file}` near line #{yard_object.line}")
+            next
+          end
+
           case tag.tag_name
           when "path"
             operation.add_path_params_and_method(tag)
@@ -22,6 +28,8 @@ module SwaggerYard
             operation.add_error_message(tag)
           when "summary"
             operation.summary = tag.text
+          else
+            swaggeryard_log.warn("Tag, #{tag.tag_name} not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
           end
         end
 

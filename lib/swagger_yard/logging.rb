@@ -8,7 +8,7 @@ module SwaggerYard
 
     def initialize(pipe, *args)
       super(pipe, *args)
-      self.level = DEBUG
+      self.level = WARN
       self.formatter = method(:format_log)
     end
 

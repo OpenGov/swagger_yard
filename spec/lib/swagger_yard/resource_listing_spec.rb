@@ -63,20 +63,4 @@ RSpec.describe SwaggerYard::ResourceListing, "reparsing" do
 
     expect(hash['paths'].keys).to contain_exactly('/bonjour', '/goodbye')
   end
-
-  describe 'invalid YARD' do
-    let(:error_fixture_files) do
-      error_fixtures = FIXTURE_PATH + 'error_handling'
-      [
-        error_fixtures + 'controller.rb',
-        error_fixtures + 'model.rb'
-      ]
-    end
-
-    let(:error_fixture_listing) { described_class.new(error_fixture_files, nil) }
-
-    it 'gives error messages and the method' do
-      hash = error_fixture_listing.to_h
-    end
-  end
 end

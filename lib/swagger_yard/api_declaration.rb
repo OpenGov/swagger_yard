@@ -57,7 +57,7 @@ module SwaggerYard
       path = Api.path_from_yard_object(yard_object)
 
       if path.nil?
-        swaggeryard_log.warn("No path found for yard object in file `#{yard_object.file}` near line #{yard_object.line}")
+        swaggeryard_log.warn("No API path found for yard object in file `#{yard_object.file}` near line #{yard_object.line}")
         return
       end
 

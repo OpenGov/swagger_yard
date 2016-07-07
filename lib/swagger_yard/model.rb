@@ -8,7 +8,7 @@ module SwaggerYard
 
     def self.from_yard_object(yard_object)
       new.tap do |model|
-        model.parse_tags(yard_object.tags)
+        model.parse_tags(yard_object)
       end
     end
 
@@ -25,8 +25,14 @@ module SwaggerYard
       !id.nil?
     end
 
-    def parse_tags(tags)
-      tags.each do |tag|
+    def parse_tags(yard_object)
+      yard_object.tags.each do |tag|
+
+        if tag.nil?
+          swaggeryard_log.fatal("Yard Object has a nil tag in file `#{yard_object.file}` near line #{yard_object.line}")
+          next
+        end
+
         case tag.tag_name
         when "model"
           @id = Model.mangle(tag.text)
@@ -38,6 +44,8 @@ module SwaggerYard
           @discriminator ||= prop.name
         when "inherits"
           @inherits << Model.mangle(tag.text)
+        else
+          swaggeryard_log.warn("Tag, #{tag.tag_name} not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
         end
       end
 
