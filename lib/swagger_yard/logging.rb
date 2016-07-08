@@ -8,7 +8,7 @@ module SwaggerYard
 
     def initialize(pipe, *args)
       super(pipe, *args)
-      self.level = WARN
+      self.level = @configuration.present? ? @configuration.log_level : FATAL  
       self.formatter = method(:format_log)
     end
 
