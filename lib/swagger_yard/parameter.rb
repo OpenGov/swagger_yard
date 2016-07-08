@@ -24,16 +24,16 @@ module SwaggerYard
 
     # TODO: support more variation in scope types
     def self.from_path_param(name)
-      new(name, Type.new("string"), "Scope response to #{name}", {
-        required: true,
-        allow_multiple: false,
-        param_type: "path",
-        from_path: true
-      })
+      new(name, Type.new('string'), "Scope response to #{name}", required: true,
+                                                                 allow_multiple: false,
+                                                                 param_type: 'path',
+                                                                 from_path: true)
     end
 
-    def initialize(name, type, description, options={})
-      @name, @type, @description = name, type, description
+    def initialize(name, type, description, options = {})
+      @name = name
+      @type = type
+      @description = description
 
       @required = options[:required] || false
       @param_type = options[:param_type] || 'query'
@@ -46,17 +46,16 @@ module SwaggerYard
     end
 
     def to_h
-      { "name"        => name,
-        "description" => description,
-        "required"    => required,
-        "in"          => param_type
-      }.tap do |h|
-        if h["in"] == "body"
-          h["schema"] = @type.to_h
+      { 'name'        => name,
+        'description' => description,
+        'required'    => required,
+        'in'          => param_type }.tap do |h|
+        if h['in'] == 'body'
+          h['schema'] = @type.to_h
         else
           h.update(@type.to_h)
         end
-        h["collectionFormat"] = 'multi' if !Array(allow_multiple).empty? && h["items"]
+        h['collectionFormat'] = 'multi' if !Array(allow_multiple).empty? && h['items']
       end
     end
   end

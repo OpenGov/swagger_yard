@@ -1,4 +1,4 @@
-require "action_controller/railtie"
+require 'action_controller/railtie'
 
 # Load SwaggerYard
 require File.expand_path('../../../../../lib/swagger_yard', __FILE__)

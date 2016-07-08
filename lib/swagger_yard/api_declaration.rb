@@ -38,19 +38,19 @@ module SwaggerYard
       @description = yard_object.docstring
       @class_name  = yard_object.path
 
-      if tag = yard_object.tags.detect {|t| t.tag_name == "resource"}
+      if tag = yard_object.tags.detect { |t| t.tag_name == 'resource' }
         @resource = tag.text
       end
 
-      if tag = yard_object.tags.detect {|t| t.tag_name == "resource_path"}
-        log.warn "DEPRECATED: @resource_path tag is obsolete."
+      if tag = yard_object.tags.detect { |t| t.tag_name == 'resource_path' }
+        log.warn 'DEPRECATED: @resource_path tag is obsolete.'
       end
 
       # we only have api_key auth, the value for now is always empty array
-      @authorizations = Hash[yard_object.tags.
-                             select {|t| t.tag_name == "authorize_with"}.
-                             map(&:text).uniq.
-                             map {|k| [k, []]}]
+      @authorizations = Hash[yard_object.tags
+                                        .select { |t| t.tag_name == 'authorize_with' }
+                                        .map(&:text).uniq
+                                        .map { |k| [k, []] }]
     end
 
     def add_api(yard_object)
@@ -66,12 +66,12 @@ module SwaggerYard
     end
 
     def apis_hash
-      Hash[apis.map {|path, api| [path, api.operations_hash]}]
+      Hash[apis.map { |path, api| [path, api.operations_hash] }]
     end
 
     def to_tag
-      { "name"        => resource,
-        "description" => description }
+      { 'name'        => resource,
+        'description' => description }
     end
   end
 end

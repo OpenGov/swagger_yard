@@ -1,18 +1,18 @@
-require "yard"
-require "json"
-require "logger"
-require_relative "swagger_yard/configuration"
-require_relative "swagger_yard/type"
-require_relative "swagger_yard/parameter"
-require_relative "swagger_yard/property"
-require_relative "swagger_yard/operation"
-require_relative "swagger_yard/authorization"
-require_relative "swagger_yard/resource_listing"
-require_relative "swagger_yard/api_declaration"
-require_relative "swagger_yard/model"
-require_relative "swagger_yard/api"
-require_relative "swagger_yard/swagger"
-require_relative "swagger_yard/logging"
+require 'yard'
+require 'json'
+require 'logger'
+require_relative 'swagger_yard/configuration'
+require_relative 'swagger_yard/type'
+require_relative 'swagger_yard/parameter'
+require_relative 'swagger_yard/property'
+require_relative 'swagger_yard/operation'
+require_relative 'swagger_yard/authorization'
+require_relative 'swagger_yard/resource_listing'
+require_relative 'swagger_yard/api_declaration'
+require_relative 'swagger_yard/model'
+require_relative 'swagger_yard/api'
+require_relative 'swagger_yard/swagger'
+require_relative 'swagger_yard/logging'
 
 module SwaggerYard
   class << self
@@ -43,7 +43,7 @@ module SwaggerYard
     #
     def yard_objects_from_file(file_path, *types)
       ::YARD.parse(file_path)
-      ::YARD::Registry.all(*types).select {|co| co.file == file_path }
+      ::YARD::Registry.all(*types).select { |co| co.file == file_path }
     end
 
     #
@@ -59,19 +59,19 @@ module SwaggerYard
     ##
     # Register some custom yard tags used by swagger-ui
     def register_custom_yard_tags!
-      ::YARD::Tags::Library.define_tag("Api resource", :resource)
-      ::YARD::Tags::Library.define_tag("Resource path", :resource_path) # TODO: remove deprecated tag
-      ::YARD::Tags::Library.define_tag("Api path", :path, :with_types)
-      ::YARD::Tags::Library.define_tag("Parameter", :parameter, :with_types_name_and_default)
-      ::YARD::Tags::Library.define_tag("Response type", :response_type, :with_types)
-      ::YARD::Tags::Library.define_tag("Error response message", :error_message, :with_types_and_name)
-      ::YARD::Tags::Library.define_tag("Api Summary", :summary)
-      ::YARD::Tags::Library.define_tag("Model resource", :model)
-      ::YARD::Tags::Library.define_tag("Model superclass", :inherits)
-      ::YARD::Tags::Library.define_tag("Model property", :property, :with_types_name_and_default)
-      ::YARD::Tags::Library.define_tag("Model discriminator", :discriminator, :with_types_name_and_default)
-      ::YARD::Tags::Library.define_tag("Authorization", :authorization, :with_types_and_name)
-      ::YARD::Tags::Library.define_tag("Authorization Use", :authorize_with)
+      ::YARD::Tags::Library.define_tag('Api resource', :resource)
+      ::YARD::Tags::Library.define_tag('Resource path', :resource_path) # TODO: remove deprecated tag
+      ::YARD::Tags::Library.define_tag('Api path', :path, :with_types)
+      ::YARD::Tags::Library.define_tag('Parameter', :parameter, :with_types_name_and_default)
+      ::YARD::Tags::Library.define_tag('Response type', :response_type, :with_types)
+      ::YARD::Tags::Library.define_tag('Error response message', :error_message, :with_types_and_name)
+      ::YARD::Tags::Library.define_tag('Api Summary', :summary)
+      ::YARD::Tags::Library.define_tag('Model resource', :model)
+      ::YARD::Tags::Library.define_tag('Model superclass', :inherits)
+      ::YARD::Tags::Library.define_tag('Model property', :property, :with_types_name_and_default)
+      ::YARD::Tags::Library.define_tag('Model discriminator', :discriminator, :with_types_name_and_default)
+      ::YARD::Tags::Library.define_tag('Authorization', :authorization, :with_types_and_name)
+      ::YARD::Tags::Library.define_tag('Authorization Use', :authorize_with)
     end
   end
 end

@@ -8,27 +8,29 @@ module SwaggerYard
     end
 
     def initialize(type, pass_as, key)
-      @type, @pass_as, @key = type, pass_as, key
+      @type = type
+      @pass_as = pass_as
+      @key = key
     end
 
     # the spec suggests most auth names are just the type of auth
     def name
-      @name ||= [@pass_as, @key].join('_').downcase.gsub('-', '_')
+      @name ||= [@pass_as, @key].join('_').downcase.tr('-', '_')
     end
 
     def type
       case @type
-      when "api_key"
-        "apiKey"
-      when "basic_auth"
-        "basicAuth"
+      when 'api_key'
+        'apiKey'
+      when 'basic_auth'
+        'basicAuth'
       end
     end
 
     def to_h
-      { "type" => type,
-        "name" => @key,
-        "in"   => @pass_as }
+      { 'type' => type,
+        'name' => @key,
+        'in'   => @pass_as }
     end
   end
 end

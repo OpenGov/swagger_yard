@@ -44,42 +44,43 @@ module SwaggerYard
       ref? ? name : nil
     end
 
-    alias :array? :array
-    alias :enum? :enum
-    alias :object? :object
+    alias array? array
+    alias enum? enum
+    alias object? object
 
     def json_type
-      type, format = name, @format
+      type = name
+      format = @format
       case name
-      when "float", "double"
-        type = "number"
+      when 'float', 'double'
+        type = 'number'
         format = name
-      when "date-time", "date", "time", "uuid"
-        type = "string"
+      when 'date-time', 'date', 'time', 'uuid'
+        type = 'string'
         format = name
       end
 
-      hsh = { "type" => type }
-      hsh["format"] = format if format
-      hsh["pattern"] = @pattern if @pattern
+      hsh = { 'type' => type }
+      hsh['format'] = format if format
+      hsh['pattern'] = @pattern if @pattern
       hsh
     end
 
     def to_h
       type = if ref?
-        { "$ref" => "#/definitions/#{name}"}
-      elsif enum?
-        { "type" => "string", "enum" => @enum }
-      else
-        json_type
+               { '$ref' => "#/definitions/#{name}" }
+             elsif enum?
+               { 'type' => 'string', 'enum' => @enum }
+             else
+               json_type
       end
 
       if array?
-        { "type" => "array", "items" => type }
+        { 'type' => 'array', 'items' => type }
       elsif object?
         {
-          "type" => "object",
-          "additionalProperties" => Type.from_type_list([object.join("<")]).to_h
+          'type' => 'object',
+          'additionalProperties' => Type.from_type_list([object.join('<')]).to_h
         }
       else
         type

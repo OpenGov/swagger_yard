@@ -11,22 +11,21 @@ module SwaggerYard
         operation.ruby_method = yard_object.name(false)
         operation.description = yard_object.docstring
         yard_object.tags.each do |tag|
-
           if tag.nil?
             SwaggerYard::Logger.instance.fatal("Yard Object has a nil tag in file `#{yard_object.file}` near line #{yard_object.line}")
             next
           end
 
           case tag.tag_name
-          when "path"
+          when 'path'
             operation.add_path_params_and_method(tag)
-          when "parameter"
+          when 'parameter'
             operation.add_parameter(tag)
-          when "response_type"
+          when 'response_type'
             operation.add_response_type(Type.from_type_list(tag.types), tag.text)
-          when "error_message"
+          when 'error_message'
             operation.add_error_message(tag)
-          when "summary"
+          when 'summary'
             operation.summary = tag.text
           else
             SwaggerYard::Logger.instance.warn("Tag, #{tag.tag_name} not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
@@ -40,29 +39,27 @@ module SwaggerYard
     def initialize(api)
       @api            = api
       @summary        = nil
-      @description    = ""
+      @description    = ''
       @parameters     = []
       @model_names    = []
       @error_messages = []
     end
 
     def summary
-      @summary || description.split("\n\n").first || ""
+      @summary || description.split("\n\n").first || ''
     end
 
     def to_h
       params      = parameters.map(&:to_h)
-      responses   = { "default" => { "description" => response_desc || summary } }
+      responses   = { 'default' => { 'description' => response_desc || summary } }
 
-      if response_type
-        responses["default"]["schema"] = response_type.to_h
-      end
+      responses['default']['schema'] = response_type.to_h if response_type
 
       unless error_messages.empty?
         error_messages.each do |err|
-          responses[err["code"].to_s] = {}.tap do |h|
-            h["description"] = err["message"]
-            h["schema"] = Type.from_type_list(Array(err["responseModel"])).to_h if err["responseModel"]
+          responses[err['code'].to_s] = {}.tap do |h|
+            h['description'] = err['message']
+            h['schema'] = Type.from_type_list(Array(err['responseModel'])).to_h if err['responseModel']
           end
         end
       end
@@ -70,25 +67,25 @@ module SwaggerYard
       api_decl = @api.api_declaration
 
       {
-        "tags"        => [api_decl.resource].compact,
-        "operationId" => "#{api_decl.resource}-#{ruby_method}",
-        "parameters"  => params,
-        "responses"   => responses,
+        'tags'        => [api_decl.resource].compact,
+        'operationId' => "#{api_decl.resource}-#{ruby_method}",
+        'parameters'  => params,
+        'responses'   => responses
       }.tap do |h|
-        h["description"] = description unless description.empty?
-        h["summary"]     = summary unless summary.empty?
+        h['description'] = description unless description.empty?
+        h['summary']     = summary unless summary.empty?
 
         authorizations = api_decl.authorizations
         unless authorizations.empty?
-          h["security"] = authorizations.map {|k,v| { k => v} }
+          h['security'] = authorizations.map { |k, v| { k => v } }
         end
 
         # Rails controller/action: if constantize/controller_path methods are
         # unavailable or constant is not defined, catch exception and skip these
         # attributes.
         begin
-          h["x-controller"] = api_decl.class_name.constantize.controller_path.to_s
-          h["x-action"]     = ruby_method.to_s
+          h['x-controller'] = api_decl.class_name.constantize.controller_path.to_s
+          h['x-action']     = ruby_method.to_s
         rescue NameError, NoMethodError
         end
       end
@@ -116,7 +113,7 @@ module SwaggerYard
     end
 
     def add_or_update_parameter(parameter)
-      if existing = @parameters.detect {|param| param.name == parameter.name }
+      if existing = @parameters.detect { |param| param.name == parameter.name }
         existing.description    = parameter.description unless parameter.from_path?
         existing.param_type     = parameter.param_type if parameter.from_path?
         existing.required     ||= parameter.required
@@ -137,17 +134,18 @@ module SwaggerYard
 
     def add_error_message(tag)
       @error_messages << {
-        "code" => Integer(tag.name),
-        "message" => tag.text,
-        "responseModel" => Array(tag.types).first
-      }.reject {|_,v| v.nil?}
+        'code' => Integer(tag.name),
+        'message' => tag.text,
+        'responseModel' => Array(tag.types).first
+      }.reject { |_, v| v.nil? }
     end
 
     def sort_parameters
-      @parameters.sort_by! {|p| p.name}
+      @parameters.sort_by!(&:name)
     end
 
     private
+
     def parse_path_params(path)
       path.scan(/\{([^\}]+)\}/).flatten
     end

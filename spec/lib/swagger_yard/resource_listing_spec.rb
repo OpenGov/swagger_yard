@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'tempfile'
 
-RSpec.describe SwaggerYard::ResourceListing, "reparsing" do
+RSpec.describe SwaggerYard::ResourceListing, 'reparsing' do
   let(:fixture_files) do
     fixtures = FIXTURE_PATH + 'resource_listing'
     [
@@ -44,13 +44,13 @@ RSpec.describe SwaggerYard::ResourceListing, "reparsing" do
     SRC
   end
 
-  it "reparses after changes to a file" do
-    File.open(filename, "w") { |f| f.write first_pass }
+  it 'reparses after changes to a file' do
+    File.open(filename, 'w') { |f| f.write first_pass }
     hash1 = resource_listing.to_h
 
     expect(hash1['paths'].keys).to contain_exactly('/hello')
 
-    File.open(filename, "w") { |f| f.write second_pass }
+    File.open(filename, 'w') { |f| f.write second_pass }
     hash2 = resource_listing.to_h
 
     expect(hash2['paths'].keys).to contain_exactly('/hello', '/hello/{msg}')
@@ -58,7 +58,7 @@ RSpec.describe SwaggerYard::ResourceListing, "reparsing" do
     File.unlink filename
   end
 
-  it "supports array arguments for paths" do
+  it 'supports array arguments for paths' do
     hash = multi_resource_listing.to_h
 
     expect(hash['paths'].keys).to contain_exactly('/bonjour', '/goodbye')
