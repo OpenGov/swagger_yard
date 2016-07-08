@@ -44,9 +44,9 @@ module SwaggerYard
       ref? ? name : nil
     end
 
-    alias array? array
-    alias enum? enum
-    alias object? object
+    alias_method :array?, :array
+    alias_method :enum?, :enum
+    alias_method :object?, :object
 
     def json_type
       type = name

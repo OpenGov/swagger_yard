@@ -1,0 +1,12 @@
+# NOTE: Below are our own exceptions and/or customizations to cops
+# Feel free to discuss as this encodes our ruby style guide.
+
+# Allow assignment in conditionals only if wraped in parenthesis.
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: true
+
+# Prefer alias_method to alias
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+inherit_from: .rubocop_todo.yml
