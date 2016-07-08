@@ -23,7 +23,7 @@ describe SwaggerYard::Api do
       before(:each) do
         yard_object.stubs(:tags).returns(tags)
         yard_object.stubs(:add_tag)
-        SwaggerYard.config.path_discovery_function = -> (obj) do
+        SwaggerYard.config.path_discovery_function = -> obj do
           expect(obj).to respond_to(:tags)
           ['GET', '/blah']
         end
