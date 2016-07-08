@@ -51,9 +51,9 @@ module SwaggerYard
     def parse_models
       @model_paths.map do |model_path|
         Dir[model_path.to_s].map do |file_path|
-          swaggeryard_log.debug("model file_path: #{file_path}")
+          SwaggerYard::Logger.instance.debug("model file_path: #{file_path}")
           SwaggerYard.yard_class_objects_from_file(file_path).map do |obj|
-            swaggeryard_log.debug("model object: #{obj}")
+            SwaggerYard::Logger.instance.debug("model object: #{obj}")
             Model.from_yard_object(obj)
           end
         end
@@ -63,9 +63,9 @@ module SwaggerYard
     def parse_controllers
       @controller_paths.map do |controller_path|
         Dir[controller_path.to_s].map do |file_path|
-          swaggeryard_log.debug("controller file_path: #{file_path}")
+          SwaggerYard::Logger.instance.debug("controller file_path: #{file_path}")
           SwaggerYard.yard_class_objects_from_file(file_path).map do |obj|
-            swaggeryard_log.debug("controller object: #{obj}")
+            SwaggerYard::Logger.instance.debug("controller object: #{obj}")
             obj.tags.select {|t| t.tag_name == "authorization"}.each do |t|
               @authorizations << Authorization.from_yard_object(t)
             end

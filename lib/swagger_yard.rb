@@ -12,7 +12,7 @@ require_relative "swagger_yard/api_declaration"
 require_relative "swagger_yard/model"
 require_relative "swagger_yard/api"
 require_relative "swagger_yard/swagger"
-require_relative "swagger_yard/global"
+require_relative "swagger_yard/logging"
 
 module SwaggerYard
   class << self

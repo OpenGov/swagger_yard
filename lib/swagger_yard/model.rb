@@ -29,7 +29,7 @@ module SwaggerYard
       yard_object.tags.each do |tag|
 
         if tag.nil?
-          swaggeryard_log.fatal("Yard Object has a nil tag in file `#{yard_object.file}` near line #{yard_object.line}")
+          SwaggerYard::Logger.fatal("Yard Object has a nil tag in file `#{yard_object.file}` near line #{yard_object.line}")
           next
         end
 
@@ -45,7 +45,7 @@ module SwaggerYard
         when "inherits"
           @inherits << Model.mangle(tag.text)
         else
-          swaggeryard_log.warn("Tag, #{tag.tag_name} not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
+          SwaggerYard::Logger.instance.warn("Tag, #{tag.tag_name} not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
         end
       end
 
