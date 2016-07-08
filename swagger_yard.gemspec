@@ -27,5 +27,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'bourne'
   s.add_development_dependency 'pry'
-  s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rubocop', '0.40.0'
 end
