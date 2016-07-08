@@ -53,7 +53,7 @@ module SwaggerYard
         Dir[model_path.to_s].map do |file_path|
           swaggeryard_log.debug("model file_path: #{file_path}")
           SwaggerYard.yard_class_objects_from_file(file_path).map do |obj|
-            swaggeryard_log.debug("model object: #{file_path}")
+            swaggeryard_log.debug("model object: #{obj}")
             Model.from_yard_object(obj)
           end
         end
