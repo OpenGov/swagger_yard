@@ -12,7 +12,7 @@ module SwaggerYard
         operation.description = yard_object.docstring
         yard_object.tags.each do |tag|
           if tag.nil?
-            SwaggerYard::Logger.instance.fatal("Yard Object has a nil tag in file `#{yard_object.file}` near line #{yard_object.line}")
+            SwaggerYard.config.logger.fatal("Yard Object has a nil tag in file `#{yard_object.file}` near line #{yard_object.line}")
             next
           end
 
@@ -28,7 +28,7 @@ module SwaggerYard
           when 'summary'
             operation.summary = tag.text
           else
-            SwaggerYard::Logger.instance.warn("Tag, #{tag.tag_name} not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
+            SwaggerYard.config.logger.warn("Tag, #{tag.tag_name} not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
           end
         end
 

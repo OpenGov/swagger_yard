@@ -5,5 +5,4 @@ SwaggerYard.configure do |config|
   config.api_base_path = 'http://localhost:3000/api'
   config.controller_path = File.expand_path('../../../app/controllers/**/*', __FILE__)
   config.model_path = File.expand_path('../../../app/models/**/*', __FILE__)
-  config.log_level = ::Logger::WARN
 end

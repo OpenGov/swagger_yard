@@ -26,7 +26,7 @@ module SwaggerYard
             add_yard_object(child_object)
           end
         else
-          SwaggerYard::Logger.instance.warn("Invalid controller object in file `#{yard_object.file}` near line #{yard_object.line}")
+          SwaggerYard.config.logger.warn("Invalid controller object in file `#{yard_object.file}` near line #{yard_object.line}")
         end
       when :method # actions
         add_api(yard_object)
@@ -57,7 +57,7 @@ module SwaggerYard
       path = Api.path_from_yard_object(yard_object)
 
       if path.nil?
-        SwaggerYard::Logger.instance.warn("No API path found for yard object in file `#{yard_object.file}` near line #{yard_object.line}")
+        SwaggerYard.config.logger.warn("No API path found for yard object in file `#{yard_object.file}` near line #{yard_object.line}")
         return
       end
 

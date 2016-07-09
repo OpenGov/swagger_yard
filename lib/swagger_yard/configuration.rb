@@ -1,3 +1,5 @@
+require 'logger'
+
 module SwaggerYard
   class Configuration
     attr_accessor :api_version, :api_base_path
@@ -6,7 +8,7 @@ module SwaggerYard
     attr_accessor :enable, :reload
     attr_accessor :controller_path, :model_path
     attr_accessor :path_discovery_function
-    attr_accessor :log_level
+    attr_accessor :logger
 
     def initialize
       self.swagger_version = '2.0'
@@ -15,7 +17,11 @@ module SwaggerYard
       self.reload = true
       self.title = 'Configure title with SwaggerYard.config.title'
       self.description = 'Configure description with SwaggerYard.config.description'
-      self.log_level = ::Logger::FATAL
+      self.logger = ::Logger.new(STDOUT)
+      self.logger.level = ::Logger::FATAL
+      self.logger.formatter = proc do |sev, _datetime, _progname, msg|
+        "[SwaggerYard-#{sev.downcase}]: #{msg}\n"
+      end
     end
 
     def swagger_spec_base_path=(_ignored)
