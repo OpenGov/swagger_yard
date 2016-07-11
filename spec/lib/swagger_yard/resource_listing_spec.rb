@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'tempfile'
+require 'stringio'
 
 RSpec.describe SwaggerYard::ResourceListing, 'reparsing' do
   let(:fixture_files) do
@@ -62,5 +63,33 @@ RSpec.describe SwaggerYard::ResourceListing, 'reparsing' do
     hash = multi_resource_listing.to_h
 
     expect(hash['paths'].keys).to contain_exactly('/bonjour', '/goodbye')
+  end
+
+  describe 'logging' do
+    before(:each) do
+      ::YARD::Registry.clear # have to otherwise tests will fail
+      @log_string = StringIO.new
+      logger = ::Logger.new @log_string
+      logger.level = ::Logger::WARN
+      SwaggerYard.config.logger = logger
+    end
+
+    it 'gives warnings for tags that will not be correctly parsed' do
+      described_class.new(
+      [
+        FIXTURE_PATH + 'malformed_files' + 'malformed_controller.rb',
+      ], nil).to_h
+
+      expect(@log_string.string).to include('Tag, property, not recognized in file')
+    end
+
+    it 'gives a warning about an invalid controller' do
+      described_class.new(
+      [
+        FIXTURE_PATH + 'malformed_files' + 'invalid_controller.rb'
+      ], nil).to_h
+
+      expect(@log_string.string).to include('Invalid controller object in file')
+    end
   end
 end

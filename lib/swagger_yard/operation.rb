@@ -28,7 +28,7 @@ module SwaggerYard
           when 'summary'
             operation.summary = tag.text
           else
-            SwaggerYard.config.logger.warn("Tag, #{tag.tag_name} not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
+            SwaggerYard.config.logger.warn("Tag, #{tag.tag_name}, not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
           end
         end
 
