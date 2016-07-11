@@ -76,18 +76,20 @@ RSpec.describe SwaggerYard::ResourceListing, 'reparsing' do
 
     it 'gives warnings for tags that will not be correctly parsed' do
       described_class.new(
-      [
-        FIXTURE_PATH + 'malformed_files' + 'malformed_controller.rb',
-      ], nil).to_h
+        [
+          FIXTURE_PATH + 'malformed_files' + 'malformed_controller.rb'
+        ], nil
+      ).to_h
 
       expect(@log_string.string).to include('Tag, property, not recognized in file')
     end
 
     it 'gives a warning about an invalid controller' do
       described_class.new(
-      [
-        FIXTURE_PATH + 'malformed_files' + 'invalid_controller.rb'
-      ], nil).to_h
+        [
+          FIXTURE_PATH + 'malformed_files' + 'invalid_controller.rb'
+        ], nil
+      ).to_h
 
       expect(@log_string.string).to include('Invalid controller object in file')
     end
