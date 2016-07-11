@@ -17,11 +17,12 @@ module SwaggerYard
       self.reload = true
       self.title = 'Configure title with SwaggerYard.config.title'
       self.description = 'Configure description with SwaggerYard.config.description'
-      self.logger = ::Logger.new(STDOUT)
-      self.logger.level = ::Logger::FATAL
-      self.logger.formatter = proc do |sev, _datetime, _progname, msg|
+      logger = ::Logger.new(STDOUT)
+      logger.level = ::Logger::FATAL
+      logger.formatter = proc do |sev, _datetime, _progname, msg|
         "[SwaggerYard-#{sev.downcase}]: #{msg}\n"
       end
+      self.logger = logger
     end
 
     def swagger_spec_base_path=(_ignored)
