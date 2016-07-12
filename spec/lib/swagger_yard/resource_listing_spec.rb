@@ -93,5 +93,17 @@ RSpec.describe SwaggerYard::ResourceListing, 'reparsing' do
 
       expect(@log_string.string).to include('Invalid controller object in file')
     end
+
+    it 'gives a warning about an invalid model' do
+      described_class.new(
+        [
+          FIXTURE_PATH + 'malformed_files' + 'good_controller.rb'
+        ],
+        [
+          FIXTURE_PATH + 'malformed_files' + 'malformed_model.rb'
+        ]
+      ).to_h
+      expect(@log_string.string).to include('Tag, parameter, not recognized in file')
+    end
   end
 end
