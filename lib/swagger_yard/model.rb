@@ -62,7 +62,7 @@ module SwaggerYard
     def to_h
       h = {
         'type' => 'object',
-        'properties' => Hash[@properties.map { |p| [p.name, p.to_h] }]
+        'properties' => @properties.each_with_object({}) { |p, prop_h| prop_h[p.name] = p.to_h }
       }
 
       h['required'] = @properties.select(&:required?).map(&:name) if @properties.detect(&:required?)
