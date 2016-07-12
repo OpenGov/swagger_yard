@@ -47,10 +47,7 @@ module SwaggerYard
       end
 
       # we only have api_key auth, the value for now is always empty array
-      @authorizations = Hash[yard_object.tags
-                                        .select { |t| t.tag_name == 'authorize_with' }
-                                        .map(&:text).uniq
-                                        .map { |k| [k, []] }]
+      @authorizations = yard_object.tags.each_with_object({}) { |t, auth| auth[t.text] = [] if t.tag_name == 'authorize_with' }
     end
 
     def add_api(yard_object)
@@ -66,7 +63,7 @@ module SwaggerYard
     end
 
     def apis_hash
-      Hash[apis.map { |path, api| [path, api.operations_hash] }]
+      apis.each_with_object({}) { |(path, api), api_hash| api_hash[path] = api.operations_hash }
     end
 
     def to_tag
