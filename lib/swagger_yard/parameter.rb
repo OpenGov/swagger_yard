@@ -46,17 +46,22 @@ module SwaggerYard
     end
 
     def to_h
-      { 'name'        => name,
-        'description' => description,
-        'required'    => required,
-        'in'          => param_type }.tap do |h|
-        if h['in'] == 'body'
-          h['schema'] = @type.to_h
-        else
-          h.update(@type.to_h)
-        end
-        h['collectionFormat'] = 'multi' if !Array(allow_multiple).empty? && h['items']
+      param_hash = {
+        'name'         => name,
+        'description'  => description,
+        'required'     => required,
+        'in'           => param_type
+      }
+
+      if param_type == 'body'
+        param_hash['schema'] = @type.to_h
+      else
+        param_hash.update(@type.to_h)
       end
+
+      param_hash['collectionFormat'] = 'multi' if !Array(allow_multiple).empty? && param_hash['items']
+
+      param_hash
     end
   end
 end
