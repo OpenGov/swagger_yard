@@ -1,3 +1,5 @@
+require 'logger'
+
 module SwaggerYard
   class Configuration
     attr_accessor :api_version, :api_base_path
@@ -6,22 +8,29 @@ module SwaggerYard
     attr_accessor :enable, :reload
     attr_accessor :controller_path, :model_path
     attr_accessor :path_discovery_function
+    attr_accessor :logger
 
     def initialize
-      self.swagger_version = "2.0"
-      self.api_version = "0.1"
+      self.swagger_version = '2.0'
+      self.api_version = '0.1'
       self.enable = false
       self.reload = true
-      self.title = "Configure title with SwaggerYard.config.title"
-      self.description = "Configure description with SwaggerYard.config.description"
+      self.title = 'Configure title with SwaggerYard.config.title'
+      self.description = 'Configure description with SwaggerYard.config.description'
+      logger = ::Logger.new(STDOUT)
+      logger.level = ::Logger::FATAL
+      logger.formatter = proc do |sev, _datetime, _progname, msg|
+        "[SwaggerYard-#{sev.downcase}]: #{msg}\n"
+      end
+      self.logger = logger
     end
 
-    def swagger_spec_base_path=(ignored)
-      warn "DEPRECATED: swagger_spec_base_path is no longer necessary."
+    def swagger_spec_base_path=(_ignored)
+      warn 'DEPRECATED: swagger_spec_base_path is no longer necessary.'
     end
 
-    def api_path=(ignored)
-      warn "DEPRECATED: api_path is no longer necessary."
+    def api_path=(_ignored)
+      warn 'DEPRECATED: api_path is no longer necessary.'
     end
   end
 end

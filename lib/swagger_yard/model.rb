@@ -8,7 +8,7 @@ module SwaggerYard
 
     def self.from_yard_object(yard_object)
       new.tap do |model|
-        model.parse_tags(yard_object.tags)
+        model.parse_tags(yard_object)
       end
     end
 
@@ -25,19 +25,26 @@ module SwaggerYard
       !id.nil?
     end
 
-    def parse_tags(tags)
-      tags.each do |tag|
+    def parse_tags(yard_object)
+      yard_object.tags.each do |tag|
+        if tag.nil?
+          SwaggerYard.config.logger.fatal("Yard Object has a nil tag in file `#{yard_object.file}` near line #{yard_object.line}")
+          next
+        end
+
         case tag.tag_name
-        when "model"
+        when 'model'
           @id = Model.mangle(tag.text)
-        when "property"
+        when 'property'
           @properties << Property.from_tag(tag)
-        when "discriminator"
+        when 'discriminator'
           prop = Property.from_tag(tag)
           @properties << prop
           @discriminator ||= prop.name
-        when "inherits"
+        when 'inherits'
           @inherits << Model.mangle(tag.text)
+        else
+          SwaggerYard.config.logger.warn("Tag, #{tag.tag_name}, not recognized in file `#{yard_object.file}` near line #{yard_object.line}")
         end
       end
 
@@ -47,25 +54,25 @@ module SwaggerYard
     def inherits_references
       @inherits.map do |name|
         {
-          "$ref" => "#/definitions/#{name}"
+          '$ref' => "#/definitions/#{name}"
         }
       end
     end
 
     def to_h
       h = {
-        "type" => "object",
-        "properties" => Hash[@properties.map {|p| [p.name, p.to_h]}]
+        'type' => 'object',
+        'properties' => @properties.each_with_object({}) { |p, prop_h| prop_h[p.name] = p.to_h }
       }
 
-      h["required"] = @properties.select(&:required?).map(&:name) if @properties.detect(&:required?)
-      h["discriminator"] = @discriminator if @discriminator
+      h['required'] = @properties.select(&:required?).map(&:name) if @properties.detect(&:required?)
+      h['discriminator'] = @discriminator if @discriminator
 
       # Polymorphism
-      h = { "allOf" => inherits_references + [h] } unless @inherits.empty?
+      h = { 'allOf' => inherits_references + [h] } unless @inherits.empty?
 
       # Description
-      h["description"] = @description if @description
+      h['description'] = @description if @description
 
       h
     end

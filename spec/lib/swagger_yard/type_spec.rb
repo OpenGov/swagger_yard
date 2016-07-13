@@ -19,45 +19,37 @@ RSpec.describe SwaggerYard::Type do
 
   describe '#to_h' do
     it 'handles additionalProperties with uniform simple key-values' do
-      expect(type('object<string>').to_h).to eq({
-        "type" => "object",
-        "additionalProperties" => {
-          "type" => "string"
-        }
-      })
+      expect(type('object<string>').to_h).to eq('type' => 'object',
+                                                'additionalProperties' => {
+                                                  'type' => 'string'
+                                                })
     end
 
     it 'handles additionalProperties with uniform model key-values' do
-      expect(type('object<MyApp::Greeting>').to_h).to eq({
-        "type" => "object",
-        "additionalProperties" => {
-          "$ref" => "#/definitions/MyApp_Greeting"
-        }
-      })
+      expect(type('object<MyApp::Greeting>').to_h).to eq('type' => 'object',
+                                                         'additionalProperties' => {
+                                                           '$ref' => '#/definitions/MyApp_Greeting'
+                                                         })
     end
 
     it 'handles additionalProperties with uniform key-values of arrays of models' do
-      expect(type('object<array<MyApp::Greeting>>').to_h).to eq({
-        "type" => "object",
-        "additionalProperties" => {
-          "type" => "array",
-          "items" => {
-            "$ref" => "#/definitions/MyApp_Greeting"
-          }
-        }
-      })
+      expect(type('object<array<MyApp::Greeting>>').to_h).to eq('type' => 'object',
+                                                                'additionalProperties' => {
+                                                                  'type' => 'array',
+                                                                  'items' => {
+                                                                    '$ref' => '#/definitions/MyApp_Greeting'
+                                                                  }
+                                                                })
     end
 
     it 'handles nested object definitions' do
-      expect(type('object<object<string>>').to_h).to eq({
-        "type" => "object",
-        "additionalProperties" => {
-          "type" => "object",
-          "additionalProperties" => {
-            "type" => "string"
-          }
-        }
-      })
+      expect(type('object<object<string>>').to_h).to eq('type' => 'object',
+                                                        'additionalProperties' => {
+                                                          'type' => 'object',
+                                                          'additionalProperties' => {
+                                                            'type' => 'string'
+                                                          }
+                                                        })
     end
   end
 end

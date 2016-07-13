@@ -3,12 +3,12 @@ module SwaggerYard
     attr_accessor :path, :operations, :api_declaration
 
     def self.path_from_yard_object(yard_object)
-      if tag = yard_object.tags.detect {|t| t.tag_name == "path"}
+      if tag = yard_object.tags.detect { |t| t.tag_name == 'path' }
         tag.text
       elsif fn = SwaggerYard.config.path_discovery_function
         begin
           method, path = fn[yard_object]
-          yard_object.add_tag YARD::Tags::Tag.new("path", path, [method]) if path
+          yard_object.add_tag YARD::Tags::Tag.new('path', path, [method]) if path
           path
         rescue => e
           YARD::Logger.instance.warn e.message
@@ -33,7 +33,7 @@ module SwaggerYard
     end
 
     def operations_hash
-      Hash[@operations.map {|op| [op.http_method.downcase, op.to_h]}]
+      Hash[@operations.map { |op| [op.http_method.downcase, op.to_h] }]
     end
   end
 end

@@ -14,7 +14,8 @@ module SwaggerYard
     end
 
     def initialize(name, types, description, options)
-      @name, @description = name, description
+      @name = name
+      @description = description
       @required = options.include?('required')
       @nullable = options.include?('nullable')
       @type = Type.from_type_list(types)
@@ -26,12 +27,10 @@ module SwaggerYard
 
     def to_h
       @type.to_h.tap do |h|
-        h["description"] = description if description
+        h['description'] = description if description
         if @nullable
-          h["x-nullable"] = true
-          if h["type"]
-            h["type"] = [h["type"], "null"]
-          end
+          h['x-nullable'] = true
+          h['type'] = [h['type'], 'null'] if h['type']
         end
       end
     end

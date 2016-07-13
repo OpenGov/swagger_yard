@@ -1,23 +1,23 @@
 require 'spec_helper'
 
 describe SwaggerYard::Api do
-  context "with a parsed yard object" do
-    let(:yard_object) {stub(docstring: 'A Description')}
-    let(:api_declaration) {SwaggerYard::ApiDeclaration.new}
+  context 'with a parsed yard object' do
+    let(:yard_object) { stub(docstring: 'A Description') }
+    let(:api_declaration) { SwaggerYard::ApiDeclaration.new }
 
-    subject(:api) {SwaggerYard::Api.from_yard_object(yard_object, api_declaration)}
+    subject(:api) { SwaggerYard::Api.from_yard_object(yard_object, api_declaration) }
 
-    context "from yard object" do
-      let(:tags) { [yard_tag("@path [GET] /accounts/ownerships")] }
+    context 'from yard object' do
+      let(:tags) { [yard_tag('@path [GET] /accounts/ownerships')] }
 
       before(:each) do
         yard_object.stubs(:tags).returns(tags)
       end
 
-      its(:path) { is_expected.to eq("/accounts/ownerships") }
+      its(:path) { is_expected.to eq('/accounts/ownerships') }
     end
 
-    context "with dynamic path discovery" do
+    context 'with dynamic path discovery' do
       let(:tags) { [] }
 
       before(:each) do
@@ -36,14 +36,14 @@ describe SwaggerYard::Api do
         expect(SwaggerYard::Api.path_from_yard_object(yard_object)).to eq('/blah')
       end
 
-      context "when the function returns nil" do
-        before { SwaggerYard.config.path_discovery_function = ->(obj) { nil } }
+      context 'when the function returns nil' do
+        before { SwaggerYard.config.path_discovery_function = ->(_obj) { nil } }
         its(:path) { is_expected.to be_nil }
       end
 
-      context "when the function raises" do
+      context 'when the function raises' do
         include SilenceLogger
-        before { SwaggerYard.config.path_discovery_function = ->(obj) { raise "error" } }
+        before { SwaggerYard.config.path_discovery_function = ->(_obj) { raise 'error' } }
         its(:path) { is_expected.to be_nil }
       end
     end

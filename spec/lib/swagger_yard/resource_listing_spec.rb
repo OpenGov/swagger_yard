@@ -1,7 +1,8 @@
 require 'spec_helper'
 require 'tempfile'
+require 'stringio'
 
-RSpec.describe SwaggerYard::ResourceListing, "reparsing" do
+RSpec.describe SwaggerYard::ResourceListing, 'reparsing' do
   let(:fixture_files) do
     fixtures = FIXTURE_PATH + 'resource_listing'
     [
@@ -44,13 +45,13 @@ RSpec.describe SwaggerYard::ResourceListing, "reparsing" do
     SRC
   end
 
-  it "reparses after changes to a file" do
-    File.open(filename, "w") { |f| f.write first_pass }
+  it 'reparses after changes to a file' do
+    File.open(filename, 'w') { |f| f.write first_pass }
     hash1 = resource_listing.to_h
 
     expect(hash1['paths'].keys).to contain_exactly('/hello')
 
-    File.open(filename, "w") { |f| f.write second_pass }
+    File.open(filename, 'w') { |f| f.write second_pass }
     hash2 = resource_listing.to_h
 
     expect(hash2['paths'].keys).to contain_exactly('/hello', '/hello/{msg}')
@@ -58,9 +59,51 @@ RSpec.describe SwaggerYard::ResourceListing, "reparsing" do
     File.unlink filename
   end
 
-  it "supports array arguments for paths" do
+  it 'supports array arguments for paths' do
     hash = multi_resource_listing.to_h
 
     expect(hash['paths'].keys).to contain_exactly('/bonjour', '/goodbye')
+  end
+
+  describe 'logging' do
+    before(:each) do
+      ::YARD::Registry.clear # have to otherwise tests will fail
+      @log_string = StringIO.new
+      logger = ::Logger.new @log_string
+      logger.level = ::Logger::WARN
+      SwaggerYard.config.logger = logger
+    end
+
+    it 'gives warnings for tags that will not be correctly parsed' do
+      described_class.new(
+        [
+          FIXTURE_PATH + 'malformed_files' + 'malformed_controller.rb'
+        ], nil
+      ).to_h
+
+      expect(@log_string.string).to include('Tag, property, not recognized in file')
+    end
+
+    it 'gives a warning about an invalid controller' do
+      described_class.new(
+        [
+          FIXTURE_PATH + 'malformed_files' + 'invalid_controller.rb'
+        ], nil
+      ).to_h
+
+      expect(@log_string.string).to include('Invalid controller object in file')
+    end
+
+    it 'gives a warning about an invalid model' do
+      described_class.new(
+        [
+          FIXTURE_PATH + 'malformed_files' + 'good_controller.rb'
+        ],
+        [
+          FIXTURE_PATH + 'malformed_files' + 'malformed_model.rb'
+        ]
+      ).to_h
+      expect(@log_string.string).to include('Tag, parameter, not recognized in file')
+    end
   end
 end

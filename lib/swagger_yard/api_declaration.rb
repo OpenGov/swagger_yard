@@ -25,6 +25,8 @@ module SwaggerYard
           yard_object.children.each do |child_object|
             add_yard_object(child_object)
           end
+        else
+          SwaggerYard.config.logger.warn("Invalid controller object in file `#{yard_object.file}` near line #{yard_object.line}")
         end
       when :method # actions
         add_api(yard_object)
@@ -36,37 +38,37 @@ module SwaggerYard
       @description = yard_object.docstring
       @class_name  = yard_object.path
 
-      if tag = yard_object.tags.detect {|t| t.tag_name == "resource"}
+      if tag = yard_object.tags.detect { |t| t.tag_name == 'resource' }
         @resource = tag.text
       end
 
-      if tag = yard_object.tags.detect {|t| t.tag_name == "resource_path"}
-        log.warn "DEPRECATED: @resource_path tag is obsolete."
+      if tag = yard_object.tags.detect { |t| t.tag_name == 'resource_path' }
+        log.warn 'DEPRECATED: @resource_path tag is obsolete.'
       end
 
       # we only have api_key auth, the value for now is always empty array
-      @authorizations = Hash[yard_object.tags.
-                             select {|t| t.tag_name == "authorize_with"}.
-                             map(&:text).uniq.
-                             map {|k| [k, []]}]
+      @authorizations = yard_object.tags.each_with_object({}) { |t, auth| auth[t.text] = [] if t.tag_name == 'authorize_with' }
     end
 
     def add_api(yard_object)
       path = Api.path_from_yard_object(yard_object)
 
-      return if path.nil?
+      if path.nil?
+        SwaggerYard.config.logger.warn("No API path found for yard object in file `#{yard_object.file}` near line #{yard_object.line}")
+        return
+      end
 
       api = (apis[path] ||= Api.from_yard_object(yard_object, self))
       api.add_operation(yard_object)
     end
 
     def apis_hash
-      Hash[apis.map {|path, api| [path, api.operations_hash]}]
+      apis.each_with_object({}) { |(path, api), api_hash| api_hash[path] = api.operations_hash }
     end
 
     def to_tag
-      { "name"        => resource,
-        "description" => description }
+      { 'name'        => resource,
+        'description' => description }
     end
   end
 end
