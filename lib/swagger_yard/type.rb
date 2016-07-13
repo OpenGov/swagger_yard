@@ -66,7 +66,7 @@ module SwaggerYard
       hsh
     end
 
-    def type
+    def swagger_type
       if ref?
         { '$ref' => "#/definitions/#{name}" }
       elsif enum?
@@ -78,14 +78,14 @@ module SwaggerYard
 
     def to_h
       if array?
-        { 'type' => 'array', 'items' => type }
+        { 'type' => 'array', 'items' => swagger_type }
       elsif object?
         {
           'type' => 'object',
           'additionalProperties' => Type.from_type_list([object.join('<')]).to_h
         }
       else
-        type
+        swagger_type
       end
     end
   end
