@@ -39,11 +39,11 @@ module SwaggerYard
     end
 
     def model_objects
-      Hash[models.map { |m| [m.id, m.to_h] }]
+      models.each_with_object({}) { |m, m_h| m_h[m.id] = m.to_h }
     end
 
     def security_objects
-      Hash[authorizations.map { |auth| [auth.name, auth.to_h] }]
+      authorizations.each_with_object({}) { |auth, auth_h| auth_h[auth.name] = auth.to_h }
     end
 
     private
