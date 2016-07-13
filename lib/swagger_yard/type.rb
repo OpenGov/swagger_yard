@@ -1,6 +1,13 @@
 module SwaggerYard
   class Type
     def self.from_type_list(types)
+      types = types.compact
+
+      unless types.present?
+        SwaggerYard.config.logger.fatal('Types array is empty for a yard object. Check your YARD syntax and types')
+        raise 'Types array is empty. Check your YARD syntax and types'
+      end
+
       parts = types.first.split(/[<>]/)
       name = parts.last
       options = {}

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'stringio'
 
 RSpec.describe SwaggerYard::Type do
   def type(t)
@@ -15,6 +16,15 @@ RSpec.describe SwaggerYard::Type do
 
   it 'does not mangle names that only contain identifier characters' do
     expect(type('MyApp__Greeting').name).to eq('MyApp__Greeting')
+  end
+
+  it 'handles nil types and warns the user' do
+    log_string = StringIO.new
+    logger = ::Logger.new log_string
+    logger.level = ::Logger::WARN
+    SwaggerYard.config.logger = logger
+    expect { type(nil) }.to raise_error(RuntimeError, 'Types array is empty. Check your YARD syntax and types')
+    expect(log_string.string).to include('Types array is empty for a yard object. Check your YARD syntax')
   end
 
   describe '#to_h' do
