@@ -1,6 +1,11 @@
 module SwaggerYard
   class Type
     def self.from_type_list(types)
+      unless types.select(&:nil?).empty?
+        SwaggerYard.config.logger.fatal("nil type was found in #{types}")
+        raise 'Nil type was found'
+      end
+
       parts = types.first.split(/[<>]/)
       name = parts.last
       options = {}
