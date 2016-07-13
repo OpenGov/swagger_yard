@@ -1,9 +1,11 @@
 module SwaggerYard
   class Type
     def self.from_type_list(types)
-      unless types.select(&:nil?).empty?
-        SwaggerYard.config.logger.fatal("nil type was found in #{types}")
-        raise 'Nil type was found'
+      types = types.compact
+
+      unless types.present?
+        SwaggerYard.config.logger.fatal('Types array is empty for a yard object. Check your YARD syntax and types')
+        raise 'Types array is empty. Check your YARD syntax and types'
       end
 
       parts = types.first.split(/[<>]/)

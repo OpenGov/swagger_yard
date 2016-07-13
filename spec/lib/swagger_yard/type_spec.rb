@@ -23,8 +23,8 @@ RSpec.describe SwaggerYard::Type do
     logger = ::Logger.new log_string
     logger.level = ::Logger::WARN
     SwaggerYard.config.logger = logger
-    expect { type(nil) }.to raise_error(RuntimeError, 'Nil type was found')
-    expect(log_string.string).to include('nil type was found')
+    expect { type(nil) }.to raise_error(RuntimeError, 'Types array is empty. Check your YARD syntax and types')
+    expect(log_string.string).to include('Types array is empty for a yard object. Check your YARD syntax')
   end
 
   describe '#to_h' do
