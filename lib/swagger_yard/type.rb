@@ -66,15 +66,17 @@ module SwaggerYard
       hsh
     end
 
-    def to_h
-      type = if ref?
-               { '$ref' => "#/definitions/#{name}" }
-             elsif enum?
-               { 'type' => 'string', 'enum' => @enum }
-             else
-               json_type
+    def type
+      if ref?
+        { '$ref' => "#/definitions/#{name}" }
+      elsif enum?
+        { 'type' => 'string', 'enum' => @enum }
+      else
+        json_type
       end
+    end
 
+    def to_h
       if array?
         { 'type' => 'array', 'items' => type }
       elsif object?
