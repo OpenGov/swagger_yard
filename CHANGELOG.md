@@ -1,5 +1,11 @@
 # SwaggerYard Changelog #
 
+## 0.4.0 -- 13-07-2016 ##
+
+* Added a configurable logger for SwaggerYard
+* Added warning, fatal, and debugging logs
+* Added Rubocop for linting and refactored `Hash[]` to `each_with_object`
+
 ## 0.3.5 -- 29-01-2016 ##
 
 * Ensure controller and action attributes are strings
